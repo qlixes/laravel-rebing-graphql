@@ -3,9 +3,11 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Comment;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
+use Closure;
 
 class CommentsQuery extends Query
 {
@@ -25,14 +27,13 @@ class CommentsQuery extends Query
                 "name"  => "id",
                 "type"  => Type::int(),
             ],
-            "post_id"   => [
-                "name"  => "id",
-                "type"  => Type::int(),
+            "content"   => [
+                "type"  => Type::nonNull(Type::string()),
             ],
         ];
     }
 
-    function resolve($root, $args)
+    function resolve($root, array $args, $context, ResolveInfo $info, Closure $getSelectFields)
     {
         $comment = Comment::withoutTrashed();
 
@@ -43,6 +44,12 @@ class CommentsQuery extends Query
         if (isset($args["post_id"])) {
             $comment = $comment->orWhere("post_id", $args["post_id"]);
         }
+
+        $fields = $getSelectFields();
+        $select = $fields->getSelect();
+        $with = $fields->getRelations();
+
+        $comment = $comment->select($select)->with($with);
 
         return $comment->get();
     }

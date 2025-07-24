@@ -3,9 +3,11 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Post;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
+use Closure;
 
 class PostsQuery extends Query
 {
@@ -40,7 +42,7 @@ class PostsQuery extends Query
         ];
     }
 
-    function resolve($root, $args)
+    function resolve($root, array $args, $context, ResolveInfo $info, Closure $getSelectFields)
     {
         $post = Post::withoutTrashed();
 
@@ -59,6 +61,12 @@ class PostsQuery extends Query
         if (isset($args["title"])) {
             $post = $post->orWhere("title", $args["title"])->orWhere("title", "LIKE", $args["title"]);
         }
+
+        $fields = $getSelectFields();
+        $select = $fields->getSelect();
+        $with = $fields->getRelations();
+
+        $post = $post->select($select)->with($with);
 
         return $post->get();
     }
