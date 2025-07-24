@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 return [
     'route' => [
@@ -76,13 +76,28 @@ return [
         'default' => [
             'query' => [
                 // ExampleQuery::class,
+                "users"     => App\GraphQL\Queries\UsersQuery::class,
+                "posts"     => App\GraphQL\Queries\PostsQuery::class,
+                "comments"  => App\GraphQL\Queries\CommentsQuery::class,
             ],
             'mutation' => [
                 // ExampleMutation::class,
+                "createUser"    => App\GraphQL\Mutations\CreateUserMutation::class,
+                "createPost"    => App\GraphQL\Mutations\CreatePostMutation::class,
+                "createComment" => App\GraphQL\Mutations\CreateCommentMutation::class,
+                "updateUser"    => App\GraphQL\Mutations\UpdateUserMutation::class,
+                "updatePost"    => App\GraphQL\Mutations\UpdatePostMutation::class,
+                "updateComment" => App\GraphQL\Mutations\UpdateCommentMutation::class,
+                "deleteUser"    => App\GraphQL\Mutations\DeleteUserMutation::class,
+                "deletePost"    => App\GraphQL\Mutations\DeletePostMutation::class,
+                "deleteComment" => App\GraphQL\Mutations\DeleteCommentMutation::class,
             ],
             // The types only available in this schema
             'types' => [
                 // ExampleType::class,
+                "User"      => App\GraphQL\Types\UserType::class,
+                "Post"      => App\GraphQL\Types\PostType::class,
+                "Comment"   => App\GraphQL\Types\CommentType::class,
             ],
 
             // Laravel HTTP middleware
