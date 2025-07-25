@@ -124,6 +124,7 @@ return [
         // ExampleType::class,
         // ExampleRelationType::class,
         // \Rebing\GraphQL\Support\UploadType::class,
+        App\GraphQL\Scalars\DateTimeType::class,
     ],
 
     // This callable will be passed the Error object for each errors GraphQL catch.

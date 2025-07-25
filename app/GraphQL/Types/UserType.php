@@ -29,6 +29,9 @@ class UserType extends GraphQLType
             "password"  => [
                 "type"  => Type::nonNull(Type::string()),
             ],
+            "created_at"    => [
+                "type"  => GraphQL::type("DateTime"),
+            ],
             "posts"     => [
                 "type"  => Type::listOf(GraphQL::type("Post")),
             ],
