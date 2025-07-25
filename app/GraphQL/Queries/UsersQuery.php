@@ -35,6 +35,11 @@ class UsersQuery extends Query
                 "name"  => "email",
                 "type"  => Type::string(),
             ],
+            "sort_by"   => [
+                "name"  => "sort_by",
+                "type"  => Type::string(),
+            ],
+
         ];
     }
 
@@ -43,15 +48,20 @@ class UsersQuery extends Query
         $user = User::withoutTrashed();
 
         if (isset($args["id"])) {
-            $user = $user->orWhere("id", $args["id"]);
+            $user = $user->where("id", $args["id"]);
         }
 
         if (isset($args["name"])) {
-            $user = $user->orWhere("name", $args["name"])->orWhere("name", "LIKE", $args["name"]);
+            $user = $user->where("name", $args["name"])->orWhere("name", "LIKE", "%" . $args["name"] . "%");
         }
 
         if (isset($args["email"])) {
-            $user = $user->orWhere("email", $args["email"])->orWhere("email", "LIKE", $args["email"]);
+            $user = $user->where("email", $args["email"])->orWhere("email", "LIKE", "%" . $args["email"] . "%");
+        }
+
+        if(isset($args["sort_by"]))
+        {
+            $user = $user->orderByRaw($args["sort_by"]);
         }
 
         $fields = $getSelectFields();

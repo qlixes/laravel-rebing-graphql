@@ -30,6 +30,11 @@ class CommentsQuery extends Query
             "content"   => [
                 "type"  => Type::nonNull(Type::string()),
             ],
+
+            "sort_by"   => [
+                "name"  => "sort_by",
+                "type"  => Type::string(),
+            ],
         ];
     }
 
@@ -38,11 +43,16 @@ class CommentsQuery extends Query
         $comment = Comment::withoutTrashed();
 
         if (isset($args["id"])) {
-            $comment = $comment->orWhere("id", $args["id"]);
+            $comment = $comment->where("id", $args["id"]);
         }
 
         if (isset($args["post_id"])) {
-            $comment = $comment->orWhere("post_id", $args["post_id"]);
+            $comment = $comment->where("post_id", $args["post_id"]);
+        }
+
+        if(isset($args["sort_by"]))
+        {
+            $comment = $comment->orderByRaw($args["sort_by"]);
         }
 
         $fields = $getSelectFields();

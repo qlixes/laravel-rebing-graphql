@@ -39,6 +39,11 @@ class PostsQuery extends Query
                 "name"  => "title",
                 "type"  => Type::string(),
             ],
+
+            "sort_by"   => [
+                "name"  => "sort_by",
+                "type"  => Type::string(),
+            ],
         ];
     }
 
@@ -47,19 +52,20 @@ class PostsQuery extends Query
         $post = Post::withoutTrashed();
 
         if (isset($args["id"])) {
-            $post = $post->orWhere("id", $args["id"]);
+            $post = $post->where("id", $args["id"]);
         }
 
         if (isset($args["user_id"])) {
-            $post = $post->orWhere("user_id", $args["user_id"]);
-        }
-
-        if (isset($args["slug"])) {
-            $post = $post->orWhere("slug", $args["slug"])->orWhere("slug", "LIKE", $args["slug"]);
+            $post = $post->where("user_id", $args["user_id"]);
         }
 
         if (isset($args["title"])) {
-            $post = $post->orWhere("title", $args["title"])->orWhere("title", "LIKE", $args["title"]);
+            $post = $post->where("title", $args["title"])->orWhere("title", "LIKE", "%" . $args["title"] . "%");
+        }
+
+        if(isset($args["sort_by"]))
+        {
+            $post = $post->orderByRaw($args["sort_by"]);
         }
 
         $fields = $getSelectFields();
